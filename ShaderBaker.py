@@ -51,7 +51,7 @@ class AddImageTextures(bpy.types.Operator):
                     image_texture_node = material.node_tree.nodes.new(type='ShaderNodeTexImage')
                     image_texture_node.location.x = 200  # Adjust the x-coordinate for node spacing
                     image_texture_node.location.y = 0
-                    image_texture_node.label = f"Image Texture"
+                    image_texture_node.label = f"Image Texture Bake"
                 else:
                     self.report({'ERROR'}, 'No material found')
                     return {'CANCELLED'}
@@ -85,7 +85,7 @@ class SelectImageTextures(bpy.types.Operator):
                     node_tree = material.node_tree
                     
                     for node in node_tree.nodes:
-                        if node.type == 'TEX_IMAGE':
+                        if node.type == 'TEX_IMAGE' and node.label == 'Image Texture Bake':
                             node.select = True
                         else:
                             node.select = False
@@ -113,6 +113,13 @@ class DeleteImageTextures(bpy.types.Operator):
         
             self.report({'INFO'}, 'Deleted all Image Texture Nodes')
             return {'FINISHED'}
+        
+
+class SelectImageTexture(bpy.types.Operator):
+    '''
+    Apply selected image texture to the image textures that were added
+    '''
+
 
 def register():
     '''
