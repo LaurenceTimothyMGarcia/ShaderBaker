@@ -115,10 +115,12 @@ class DeleteImageTextures(bpy.types.Operator):
             return {'FINISHED'}
         
 
-class SelectImageTexture(bpy.types.Operator):
+class ApplySelectedImageTexture(bpy.types.Operator):
     '''
     Apply selected image texture to the image textures that were added
     '''
+    bl_idname = "apply_image_texture.execute"
+    bl_label = "Apply Selected Image Texture to Image Texture Nodes"
 
 
 def register():
