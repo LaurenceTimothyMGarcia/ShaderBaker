@@ -69,8 +69,32 @@ class SelectImageTextures(bpy.types.Operator):
     bl_label = "Select All Image Texture Nodes"
     
     def execute(self, context):
-        self.report({'INFO'}, 'Selected all Image Texture Nodes')
-        return {'FINISHED'}
+        
+        # Check if object is selected
+        if bpy.context.active_object:
+            
+            # Look at each material in active obj
+            for mat_slot in bpy.context.active_object.material_slots:
+                material = mat_slot.material
+                
+                if material:
+                    # Deselect all nodes but img texture node
+                    node_tree = material.node_tree
+                    
+                    for node in node_tree.nodes:
+                        if node.type == 'TEX_IMAGE':
+                            node.select = True
+                        else:
+                            node.select = False
+                else:
+                    self.report({'ERROR'}, 'No material found')
+                    return {'CANCELLED'}
+        
+            self.report({'INFO'}, 'Selected all Image Texture Nodes')
+            return {'FINISHED'}
+        else:
+            self.report({'ERROR'}, 'No active object selected')
+            return {'CANCELLED'}
         
 
 def register():
@@ -95,12 +119,7 @@ def main():
     '''
     Main entry point to run code
     '''
-    
     register()
-    
-#    shader_baker = ShaderBaker(blend.context.scene)
-    
-#    print("Shader Baker Tool")
     
 if __name__ == "__main__":
     main()
