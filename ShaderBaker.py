@@ -19,14 +19,17 @@ class ShaderBakerPanel(bpy.types.Panel):
         
         layout.label(text="Shader Baker Panel")
         
+        # Buttons for adding, selecting, and deleting image textures
         layout.operator("add_image_textures.execute", text="Add Image Textures Nodes")
         layout.operator("select_image_textures.execute", text="Select All Image Texture Nodes")
+        layout.operator("delete_image_textures.execute", text="Delete All Image Texture Nodes")    
         
-        # If obj selected get materials
-        if bpy.context.active_object:
-            layout.prop_search(bpy.context.active_object, "active_material", bpy.data, "materials", text="Select Material")
-            
-            
+        # Drop down menu to select image texture
+        layout.label(text="Select Image Texture:")
+        layout.prop(context.scene, "selected_image_texture")
+        
+        # Button to add all selected image texture to all nodes
+#        layout.operator()
     
 
 class AddImageTextures(bpy.types.Operator):
@@ -95,7 +98,21 @@ class SelectImageTextures(bpy.types.Operator):
         else:
             self.report({'ERROR'}, 'No active object selected')
             return {'CANCELLED'}
+
+class DeleteImageTextures(bpy.types.Operator):
+    '''
+    Delete all image texture nodes
+    '''
+    bl_idname = "delete_image_textures.execute"
+    bl_label = "Delete All Image Texture Nodes"
+    
+    def execute(self, context):
+        if bpy.context.active_object:
+            for mat_slot in bpy.context.active_object.material_slots:
+                material = mat_slot.material
         
+            self.report({'INFO'}, 'Deleted all Image Texture Nodes')
+            return {'FINISHED'}
 
 def register():
     '''
@@ -105,6 +122,7 @@ def register():
     bpy.utils.register_class(ShaderBakerPanel)
     bpy.utils.register_class(AddImageTextures)
     bpy.utils.register_class(SelectImageTextures)
+    bpy.utils.register_class(DeleteImageTextures)
     
 def unregister():
     '''
@@ -114,6 +132,7 @@ def unregister():
     bpy.utils.unregister_class(ShaderBakerPanel)
     bpy.utils.unregister_class(AddImageTextures)
     bpy.utils.unregister_class(SelectImageTextures)
+    bpy.utils.unregister_class(DeleteImageTextures)
         
 def main():
     '''
