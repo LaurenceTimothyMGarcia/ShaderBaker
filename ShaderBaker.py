@@ -19,7 +19,8 @@ class ShaderBakerPanel(bpy.types.Panel):
         
         layout.label(text="Shader Baker Panel")
         
-        layout.operator("shader_baker.execute", text="Add Image Textures")
+        layout.operator("add_image_textures.execute", text="Add Image Textures")
+        layout.operator("select_image_textures.execute", text="Select All Image Texture Nodes")
         
         # If obj selected get materials
         if bpy.context.active_object:
@@ -28,26 +29,46 @@ class ShaderBakerPanel(bpy.types.Panel):
             
     
 
-class ShaderBaker(bpy.types.Operator):
+class AddImageTextures(bpy.types.Operator):
     '''
-    Primary class for the shader baker tool
+    Adding image textures
     '''
-    bl_idname = "shader_baker.execute"
-    bl_label = "Bake Shader"
+    bl_idname = "add_image_textures.execute"
+    bl_label = "Add Image Textures"
     
     def execute(self, context):
-        self.report({'INFO'}, 'Shader Baking Executed')
+        self.report({'INFO'}, 'Add Image Textures Executed')
         return {'FINISHED'}
-        
+
+class SelectImageTextures(bpy.types.Operator):
+    '''
+    Selecting image texture nodes in an object
+    '''
+    bl_idname = "select_image_textures.execute"
+    bl_label = "Select All Image Texture Nodes"
+    
+    def execute(self, context):
+        self.report({'INFO'}, 'Selected all Image Texture Nodes')
+        return {'FINISHED'}
         
 
 def register():
+    '''
+    Adds all UI elements
+    '''
+    
     bpy.utils.register_class(ShaderBakerPanel)
-    bpy.utils.register_class(ShaderBaker)
+    bpy.utils.register_class(AddImageTextures)
+    bpy.utils.register_class(SelectImageTextures)
     
 def unregister():
+    '''
+    removes all UI elements
+    '''
+    
     bpy.utils.unregister_class(ShaderBakerPanel)
-    bpy.utils.unregister_class(ShaderBaker)
+    bpy.utils.unregister_class(AddImageTextures)
+    bpy.utils.unregister_class(SelectImageTextures)
         
 def main():
     '''
