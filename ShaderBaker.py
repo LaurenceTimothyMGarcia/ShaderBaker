@@ -110,9 +110,23 @@ class DeleteImageTextures(bpy.types.Operator):
         if bpy.context.active_object:
             for mat_slot in bpy.context.active_object.material_slots:
                 material = mat_slot.material
+                
+                if material:
+                    node_tree = material.node_tree
+                    
+                    # ID node with Image Texture Bake Name and delete
+                    for node in node_tree.nodes:
+                        if node.type == 'TEX_IMAGE' and node.label == 'Image Texture Bake':
+                            node_tree.nodes.remove(node)
+                else:
+                    self.report({'ERROR'}, 'No material found')
+                    return {'CANCELLED'}
         
             self.report({'INFO'}, 'Deleted all Image Texture Nodes')
             return {'FINISHED'}
+        else:
+            self.report({'ERROR'}, 'No active object selected')
+            return {'CANCELLED'}
         
 
 class ApplySelectedImageTexture(bpy.types.Operator):
