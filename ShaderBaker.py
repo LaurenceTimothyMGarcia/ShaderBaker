@@ -24,12 +24,11 @@ class ShaderBakerPanel(bpy.types.Panel):
         layout.operator("select_image_textures.execute", text="Select All Image Texture Nodes")
         layout.operator("delete_image_textures.execute", text="Delete All Image Texture Nodes")    
         
-        # Drop down menu to select image texture
-        layout.label(text="Select Image Texture:")
-        layout.prop(context.scene, "selected_image_texture")
-        
-        # Button to add all selected image texture to all nodes
-#        layout.operator()
+        # Dropdown menu for selecting an image
+        layout.prop(context.scene, "selected_image", text="Select Image")
+
+        # Button to apply selected image texture to all nodes
+        layout.operator("apply_image_texture.execute", text="Apply Selected Image Texture")
     
 
 class AddImageTextures(bpy.types.Operator):
@@ -55,7 +54,7 @@ class AddImageTextures(bpy.types.Operator):
                 else:
                     self.report({'ERROR'}, 'No material found')
                     return {'CANCELLED'}
-                
+            
             self.report({'INFO'}, 'Image Texture Nodes Added')
             return {'FINISHED'}
         
@@ -136,26 +135,58 @@ class ApplySelectedImageTexture(bpy.types.Operator):
     bl_idname = "apply_image_texture.execute"
     bl_label = "Apply Selected Image Texture to Image Texture Nodes"
 
+    def execute(self, context):
+        selected_image = context.scene.selected_image
+
+        if bpy.context.active_object:
+            for mat_slot in bpy.context.active_object.material_slots:
+                material = mat_slot.material
+                
+                if material:
+                    node_tree = material.node_tree
+                    
+                    # Iterate over nodes to find the image texture nodes
+                    for node in node_tree.nodes:
+                        if node.type == 'TEX_IMAGE' and node.label == 'Image Texture Bake':
+                            # Apply the selected image texture to the node
+                            node.image = bpy.data.images[selected_image]
+                else:
+                    self.report({'ERROR'}, 'No material found')
+                    return {'CANCELLED'}
+        
+            self.report({'INFO'}, 'Applied selected Image Texture to Image Texture Nodes')
+            return {'FINISHED'}
+        else:
+            self.report({'ERROR'}, 'No active object selected')
+            return {'CANCELLED'}
+
 
 def register():
     '''
     Adds all UI elements
     '''
+    bpy.types.Scene.selected_image = bpy.props.EnumProperty(
+        items=[(str(i), img.name, "") for i, img in enumerate(bpy.data.images)],
+        description="Select Image"
+    )
     
     bpy.utils.register_class(ShaderBakerPanel)
     bpy.utils.register_class(AddImageTextures)
     bpy.utils.register_class(SelectImageTextures)
     bpy.utils.register_class(DeleteImageTextures)
+    bpy.utils.register_class(ApplySelectedImageTexture)
     
 def unregister():
     '''
     removes all UI elements
     '''
+    del bpy.types.Scene.selected_image
     
     bpy.utils.unregister_class(ShaderBakerPanel)
     bpy.utils.unregister_class(AddImageTextures)
     bpy.utils.unregister_class(SelectImageTextures)
     bpy.utils.unregister_class(DeleteImageTextures)
+    bpy.utils.unregister_class(ApplySelectedImageTexture)
         
 def main():
     '''
