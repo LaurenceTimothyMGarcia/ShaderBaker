@@ -145,11 +145,14 @@ class ApplySelectedImageTexture(bpy.types.Operator):
                 if material:
                     node_tree = material.node_tree
                     
+                    # Convert the selected_image to an integer
+                    selected_index = int(selected_image)
+
                     # Iterate over nodes to find the image texture nodes
                     for node in node_tree.nodes:
                         if node.type == 'TEX_IMAGE' and node.label == 'Image Texture Bake':
                             # Apply the selected image texture to the node
-                            node.image = bpy.data.images[selected_image]
+                            node.image = bpy.data.images[selected_index]
                 else:
                     self.report({'ERROR'}, 'No material found')
                     return {'CANCELLED'}
