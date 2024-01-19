@@ -8,7 +8,7 @@ This tool is built to automate the baking process for objects with multiple mate
 
 # Install
 
-# Breakdown
+# How to Use
 ![Shader Baker Tool](Images/ShaderBaker_Setup.png)
 ## Image Texture Node Settings
 ### Add Image Texture Nodes
