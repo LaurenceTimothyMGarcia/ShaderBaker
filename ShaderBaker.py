@@ -189,36 +189,36 @@ def update_image_items(self, context):
         self.items = [(str(i), img.name, "") for i, img in enumerate(bpy.data.images)]
         
 
+bpy.types.Scene.selected_image = bpy.props.EnumProperty(
+    items=[(str(i), img.name, "") for i, img in enumerate(bpy.data.images)],
+    description="Select Image",
+    update=update_image_items
+)
+
+classes = (
+    ShaderBakerPanel,
+    AddImageTextures,
+    SelectImageTextures,
+    DeleteImageTextures,
+    ApplySelectedImageTexture,
+    RefreshImageMenu,
+)
+
 def register():
     '''
     Adds all UI elements
     '''
-    bpy.types.Scene.selected_image = bpy.props.EnumProperty(
-        items=[(str(i), img.name, "") for i, img in enumerate(bpy.data.images)],
-        description="Select Image",
-        update=update_image_items
-    )
-    
-    bpy.utils.register_class(ShaderBakerPanel)
-    bpy.utils.register_class(AddImageTextures)
-    bpy.utils.register_class(SelectImageTextures)
-    bpy.utils.register_class(DeleteImageTextures)
-    bpy.utils.register_class(ApplySelectedImageTexture)
-    bpy.utils.register_class(RefreshImageMenu)
+    for cls in classes:
+        bpy.utils.register_class(cls)
     
 def unregister():
     '''
     removes all UI elements
     '''
-    del bpy.types.Scene.selected_image
-    
-    bpy.utils.unregister_class(ShaderBakerPanel)
-    bpy.utils.unregister_class(AddImageTextures)
-    bpy.utils.unregister_class(SelectImageTextures)
-    bpy.utils.unregister_class(DeleteImageTextures)
-    bpy.utils.unregister_class(ApplySelectedImageTexture)
-    bpy.utils.unregister_class(RefreshImageMenu)
-        
+    for cls in reversed(classes):
+        bpy.utils.unregister_class(cls)
+
+
 def main():
     '''
     Main entry point to run code
