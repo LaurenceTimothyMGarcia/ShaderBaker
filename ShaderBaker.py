@@ -27,8 +27,8 @@ class ShaderBakerPanel(bpy.types.Panel):
         # Dropdown menu for selecting an image
         layout.label(text="Select Image")
         row = layout.row()
-        row.operator("refresh_image_menu.execute", text="Refresh")
         row.prop(context.scene, "selected_image", text="")
+        row.operator("refresh_image_menu.execute", text="Refresh")
 
         # Button to apply selected image texture to all nodes
         layout.operator("apply_image_texture.execute", text="Apply Selected Image Texture")
@@ -176,7 +176,7 @@ class RefreshImageMenu(bpy.types.Operator):
     bl_label = "Refresh Image Menu"
 
     def execute(self, context):
-        bpy.types.Scene.selected_image_items = bpy.props.EnumProperty(
+        bpy.types.Scene.selected_image = bpy.props.EnumProperty(
             items=[(str(i), img.name, "") for i, img in enumerate(bpy.data.images)],
             description="Select Image",
             update=update_image_items
