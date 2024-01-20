@@ -89,6 +89,7 @@ class SelectImageTextures(bpy.types.Operator):
                     for node in node_tree.nodes:
                         if node.type == 'TEX_IMAGE' and node.label == 'Image Texture Bake':
                             node.select = True
+                            node_tree.nodes.active = node
                         else:
                             node.select = False
                 else:
