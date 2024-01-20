@@ -1,3 +1,10 @@
+'''
+This tool was created by Laurence Timothy Garcia 
+
+It helps automate the set up for the baking process when it comes to shader nodes in Blender.
+'''
+
+
 import bpy
 
 class ShaderBakerPanel(bpy.types.Panel):
