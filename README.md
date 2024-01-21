@@ -1,7 +1,5 @@
 # ShaderBaker
- A Blender3D tool that automates the baking process. Helps with objects with multiple shaders that need to be baked onto an image.
-
-This tool is still currently in production.
+A Blender3D tool that automates the baking process. Helps with objects with multiple shaders that need to be baked onto an image.
 
 # Description
 This tool is built to automate the baking process for objects with multiple materials. With a click of a button, users can add image texture nodes to all materials of a selected object, then apply a UV map of their choice, and bake it into the settings.
